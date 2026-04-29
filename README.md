@@ -70,7 +70,7 @@ Instead, it:
 - Prevents interaction with ad elements
 - Keeps page layout intact
 
-This helps avoid broken websites while still reducing ad visibility.
+This helps avoid broken websites while still reducing ad visibility but also makes it so scripts that detect if you have ad block fail.
 
 ---
 
