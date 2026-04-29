@@ -1,0 +1,146 @@
+body {
+    margin: 0;
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    width: 320px;
+    transition: 0.2s;
+}
+
+/* THEMES */
+body.dark {
+    background: #0b1220;
+    color: white;
+}
+
+body.light {
+    background: #f5f7fb;
+    color: #111;
+}
+
+.app {
+    padding: 12px;
+}
+
+/* top bar */
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.title {
+    font-weight: 700;
+}
+
+/* theme button */
+.theme-btn {
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+/* power button */
+.power {
+    display: flex;
+    justify-content: center;
+    margin: 14px 0;
+}
+
+.power-btn {
+    width: 85px;
+    height: 85px;
+    border-radius: 50%;
+    border: none;
+    font-size: 30px;
+    cursor: pointer;
+    background: #1e2a44;
+    color: #64748b;
+    transition: 0.2s;
+}
+
+.power-btn.active {
+    background: #3b82f6;
+    color: white;
+    box-shadow: 0 0 25px rgba(59,130,246,0.6);
+}
+
+/* status */
+.status {
+    text-align: center;
+    font-size: 13px;
+    margin-bottom: 10px;
+}
+
+/* card */
+.card {
+    padding: 10px;
+    border-radius: 12px;
+    background: rgba(255,255,255,0.05);
+}
+
+/* input */
+.input {
+    display: flex;
+    gap: 6px;
+}
+
+input {
+    flex: 1;
+    padding: 7px;
+    border-radius: 8px;
+    border: none;
+    outline: none;
+}
+
+/* whitelist */
+ul {
+    list-style: none;
+    padding: 0;
+    margin-top: 8px;
+}
+
+li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px;
+    margin-top: 6px;
+    border-radius: 8px;
+    font-size: 12px;
+}
+
+/* site + favicon */
+.site {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.favicon {
+    width: 16px;
+    height: 16px;
+    border-radius: 4px;
+}
+
+/* add button */
+button.add {
+    background: #3b82f6;
+    border: none;
+    color: white;
+    border-radius: 8px;
+    padding: 6px 10px;
+    cursor: pointer;
+}
+
+/* remove button */
+.removeBtn {
+    background: transparent;
+    border: none;
+    color: #ff4d4d;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.removeBtn:hover {
+    transform: scale(1.2);
+}

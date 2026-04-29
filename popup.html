@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>IceBlock</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link rel="stylesheet" href="popup.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+
+<body>
+
+<div class="app">
+
+    <!-- TOP BAR -->
+    <div class="topbar">
+
+        <div class="title">❄ IceBlock</div>
+
+        <button id="themeBtn" class="theme-btn">
+            <i id="themeIcon" class="fa-solid fa-moon"></i>
+        </button>
+
+    </div>
+
+    <!-- POWER -->
+    <div class="power">
+        <button id="powerBtn" class="power-btn">
+            <i class="fa-solid fa-power-off"></i>
+        </button>
+    </div>
+
+    <div id="statusText" class="status">Loading...</div>
+
+    <!-- WHITELIST -->
+    <div class="card">
+
+        <div class="input">
+            <input id="whitelistInput" placeholder="Whitelist site (example.com)">
+            <button id="addBtn" class="add">Add</button>
+        </div>
+
+        <ul id="whitelist"></ul>
+
+    </div>
+
+</div>
+
+<script src="popup.js"></script>
+</body>
+</html>
