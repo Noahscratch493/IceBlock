@@ -41,7 +41,7 @@ Instead, it:
 * Prevents interaction with ad elements
 * Keeps page layout intact
 
-This helps avoid broken websites while still reducing ad visibility.
+This helps avoid broken websites while still reducing ad visibility but also avoids getting a "You cannot use an ad blocker on this site" message.
 
 ---
 
