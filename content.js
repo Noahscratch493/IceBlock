@@ -1,6 +1,6 @@
-
 let isEnabled = true;
 let whitelist = [];
+let adDomains = [];
 
 /* -------------------------
    NORMALIZE DOMAIN
@@ -26,18 +26,33 @@ function isWhitelisted() {
 }
 
 /* -------------------------
-   STATE SYNC (IMPORTANT FIX)
+   LOAD INITIAL STATE
 -------------------------- */
-chrome.storage.sync.get(["isExtensionEnabled", "whitelistedSites"], (data) => {
-    isEnabled = data.isExtensionEnabled ?? true;
-    whitelist = data.whitelistedSites || [];
+chrome.storage.sync.get(
+    ["isExtensionEnabled", "whitelistedSites"],
+    (data) => {
+        isEnabled = data.isExtensionEnabled ?? true;
+        whitelist = data.whitelistedSites || [];
 
-    if (isEnabled && !isWhitelisted()) {
-        processFrames();
+        init();
     }
-});
+);
 
-/* live updates */
+/* -------------------------
+   GET FILTER DOMAINS
+-------------------------- */
+function loadDomains() {
+    chrome.runtime.sendMessage({ action: "getDomains" }, (res) => {
+        if (res && res.domains) {
+            adDomains = res.domains;
+            processFrames();
+        }
+    });
+}
+
+/* -------------------------
+   STORAGE SYNC
+-------------------------- */
 chrome.storage.onChanged.addListener((changes, area) => {
 
     if (area !== "sync") return;
@@ -46,7 +61,7 @@ chrome.storage.onChanged.addListener((changes, area) => {
         isEnabled = changes.isExtensionEnabled.newValue;
 
         if (!isEnabled) {
-            restoreFrames(); // IMPORTANT FIX
+            restoreFrames();
         } else {
             processFrames();
         }
@@ -54,32 +69,43 @@ chrome.storage.onChanged.addListener((changes, area) => {
 
     if (changes.whitelistedSites) {
         whitelist = changes.whitelistedSites.newValue || [];
+
+        if (isWhitelisted()) {
+            restoreFrames();
+        } else {
+            processFrames();
+        }
     }
 });
 
 /* -------------------------
-   AD DETECTION
+   AD DETECTION (UPGRADED)
 -------------------------- */
 function isAdFrame(frame) {
-    const str = (
-        frame.id +
-        " " +
-        frame.className +
-        " " +
-        frame.src
-    ).toLowerCase();
 
-    return (
-        str.includes("ad") ||
-        str.includes("ads") ||
-        str.includes("doubleclick") ||
-        str.includes("banner") ||
-        str.includes("sponsor")
-    );
+    try {
+        const url = new URL(frame.src);
+
+        const domainMatch = adDomains.some(domain =>
+            url.hostname === domain ||
+            url.hostname.endsWith("." + domain)
+        );
+
+        const keywordMatch = (
+            frame.id +
+            " " +
+            frame.className
+        ).toLowerCase().includes("ad");
+
+        return domainMatch || keywordMatch;
+
+    } catch {
+        return false;
+    }
 }
 
 /* -------------------------
-   ICE MODE APPLY
+   ICE MODE
 -------------------------- */
 function iceMode(frame) {
 
@@ -94,7 +120,7 @@ function iceMode(frame) {
 }
 
 /* -------------------------
-   RESTORE (IMPORTANT FIX)
+   RESTORE (IMPORTANT)
 -------------------------- */
 function restoreFrames() {
 
@@ -110,13 +136,13 @@ function restoreFrames() {
 }
 
 /* -------------------------
-   MAIN PROCESS
+   PROCESS FRAMES
 -------------------------- */
 function processFrames() {
 
     if (!isEnabled) return;
-
     if (isWhitelisted()) return;
+    if (!adDomains.length) return; // wait for list
 
     document.querySelectorAll("iframe").forEach(frame => {
 
@@ -131,12 +157,11 @@ function processFrames() {
 }
 
 /* -------------------------
-   OBSERVER (SAFE)
+   OBSERVER
 -------------------------- */
 const observer = new MutationObserver(() => {
 
     if (!isEnabled) return;
-
     if (isWhitelisted()) return;
 
     processFrames();
@@ -146,3 +171,11 @@ observer.observe(document.documentElement, {
     childList: true,
     subtree: true
 });
+
+/* -------------------------
+   INIT
+-------------------------- */
+function init() {
+    loadDomains();
+    processFrames();
+}
